@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+
+{% load static %}
+
+</style>
+
+<body>
+
+<h2>Coverage info for all genes</h2>
+
+<div>
+    <h3>Settings:</h3>
+    Coverage threshold: {{view_info.cov_threshold}}
+    <br>
+    Annotation file: {{view_info.anno_file}}
+</div>
+<br>
+
+<div id="table1" style="float: left;">
+    <h2>Coverage over threshold</h2>
+    <table id="myTable">
+      <tr>
+          {% for gene in gene_list %}
+          <th>{{gene}}</th>
+          {% endfor %}
+
+      </tr>
+        {% for sample_list in cot_matrix %}
+        <tr>
+            {% for sample_col in sample_list %}
+
+            <th style="background-color:rgba(255,0,0,{{sample_col.cot_perc}});">{{sample_col.cot}}</th>
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+
+
+<!--
+
+<div id="table2" style="float: right;">
+    <h2>Average coverage</h2>
+    <table id="myTable">
+      <tr>
+          {% for col in exon_cot_row %}
+          <th>{{col}}</th>
+          {% endfor %}
+
+      </tr>
+        {% for sample_list in cot_matrix %}
+        <tr>
+            {% for sample_col in sample_list %}
+
+            <th style="background-color:rgba(255,0,0,{{sample_col.cot_perc}});">{{sample_col.avc}}</th>
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+
+-->
+
+</body>

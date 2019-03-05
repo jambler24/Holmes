@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search for genes</title>
+</head>
+<body>
+Search here
+<br>
+<p>
+
+    <form method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        <input type="text" name="gene_name">
+        <button type="submit">View</button>
+
+    </form>
+
+</p>
+
+</body>
+</html>

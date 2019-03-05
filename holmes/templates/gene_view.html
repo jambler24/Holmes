@@ -1,0 +1,84 @@
+{% load render_table from django_tables2 %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View gene region</title>
+
+    <style>
+
+    .axis .domain {
+      display: none;
+    }
+
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+
+</head>
+
+<h1>Gene region: {{gene_name}}</h1>
+
+<div>
+    <h2>
+        Menu
+    </h2>
+
+    <a href="/"> Home </a>
+
+</div>
+
+
+    <script>
+
+    var barChartData = JSON.parse('{{gene_info |safe}}');
+
+var chartOptions = {
+  responsive: true,
+  legend: {
+    position: "top"
+  },
+  title: {
+    display: true,
+    text: "Chart.js Bar Chart"
+  },
+  scales: {
+    yAxes: [{
+      ticks: {
+        beginAtZero: true
+      }
+    }]
+  }
+}
+
+window.onload = function() {
+  var ctx = document.getElementById("canvas").getContext("2d");
+  window.myBar = new Chart(ctx, {
+    type: "bar",
+    data: barChartData,
+    options: chartOptions
+  });
+};
+
+
+
+</script>
+
+    <div id="container" style="width: 50%;">
+        <canvas id="canvas"></canvas>
+    </div>
+
+Table of expression in different conditions goes here
+
+
+<br>
+
+    {{ table |safe }}
+
+
+
+
+</body>
+</html>

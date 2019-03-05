@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subnetwork view</title>
+</head>
+<body>
+<h1>hello</h1>
+
+{{subnet_data}}
+
+  {% for a_node in subnet_data.nodes %}
+    <br>  <a href="/viewGene/{{a_node}}">{{a_node}} </a>
+  {% endfor %}
+
+
+</body>
+</html>
+
+

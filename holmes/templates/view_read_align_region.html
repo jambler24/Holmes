@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/igv@2.2.2/dist/igv.min.js"></script>
+</head>
+<body>
+
+<div id="igv-div" style="padding-top: 10px;padding-bottom: 10px; border:1px solid lightgray"></div>
+
+{% load static %}
+
+<script type="text/javascript">
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var options =
+        {
+            genome: "hg19",
+            locus: "chr22:32218678-32218776",
+            tracks: [
+                {
+                    type: 'alignment',
+                    format: 'bam',
+                    url: '{% static "bam/EE48_1NIC.bam" %}',
+                    indexURL: '{% static "bam/EE48_1NIC.bam.bai" %}',
+                    name: 'HG00096'
+                }
+
+            ]
+        };
+
+        var igvDiv = document.getElementById("igv-div");
+
+        igv.createBrowser(igvDiv, options)
+                .then(function (browser) {
+                    console.log("Created IGV browser");
+                })
+
+    });
+
+</script>
+
+
+
+
+</body>
+</html>

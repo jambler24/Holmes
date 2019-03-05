@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Select settings and sample</h2>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <label for="coverage_threshold">Coverage threshold: </label>
+    <input id="coverage_threshold" type="text" name="coverage_threshold" value="16">
+
+    <br>
+    <label for="a_gene_selection">Gene: </label>
+    <select id="a_gene_selection" name="a_gene_selection">
+
+        {% for a_gene in gene_list %}
+            <option value="{{a_gene}}">{{a_gene}}</option>
+        {% endfor %}
+
+    </select>
+
+    <br>
+
+    <input type="submit" value="OK">
+</form>
+
+</body>
+</html>
