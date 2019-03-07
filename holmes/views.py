@@ -14,6 +14,11 @@ from os.path import isfile, join
 from bs4 import BeautifulSoup
 import requests
 
+# Paths
+anno_folder = '/annotations/'
+bam_files_dir = '/bam_files/'
+anno_path = '/annotations/test_1_renamed.bed'
+
 
 def home(request):
 	return render(request, 'index.html')
@@ -168,9 +173,6 @@ def sub_graph_detail(request):
 
 def coverage_summary(request):
 
-	anno_path = '/Users/panix/Desktop/temp_data/annotations/test_1_renamed.bed'
-	bam_files_dir = '/Users/panix/Desktop/temp_data/bams_test/'
-
 	if request.method == 'POST':
 
 		q_gene = request.POST['a_gene_selection']
@@ -222,6 +224,10 @@ def coverage_summary(request):
 
 	else:
 
+		anno_file_list = [f for f in listdir(anno_folder) if isfile(join(anno_folder, f)) and f[-3:] == 'bed']
+
+
+
 		anno_obj = cov_tools.parse_annotation_file(anno_path)
 
 		gene_list = []
@@ -233,9 +239,6 @@ def coverage_summary(request):
 
 
 def coverage_summary_gene(request):
-
-	anno_folder = '/Users/panix/Desktop/temp_data/annotations/'
-	bam_files_dir = '/Users/panix/Desktop/temp_data/bams_test/'
 
 	if request.method == 'POST':
 
