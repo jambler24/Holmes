@@ -14,7 +14,7 @@
 
 <div>
     <h1>
-        This is the holmes homepage
+        Holmes Analytics Platform
     </h1>
 
 </div>
@@ -23,6 +23,17 @@
     <h2>Current data info</h2>
     <p>
         Information on the data currently loaded into the system.
+    </p>
+    <p>
+        Loaded genome: {{ref_files.genome }}
+        <br>
+        Loaded annotation: {{ ref_files.annotation }}
+    </p>
+    <p>
+        <h3>Only the custom track is active</h3>
+        Loaded gene list: {{custom_tracks.gene_list}}
+        <br>
+        Loaded custom track: {{custom_tracks.custom_annotation}}
     </p>
 </div>
 
@@ -33,106 +44,12 @@
     <a href="{% url 'coverageSummary' %}">Per gene coverage</a>
     <br>
     <a href="{% url 'subNetworks' %}">Subnet page</a>
+
+    <br>
+    <br>
+    <br>
+    <a href="{% url 'getGeneSubset' %}">Create custom gene annotation from list</a>
 </div>
-
-<div>
-
-    <h3>View of the genome</h3>
-
-    <svg id='chart' width="1000" height="1000"></svg>
-
-    <script>
-      var circos = new Circos({
-        container: '#chart'
-      });
-      // here should be your code
-
-    var myCircos = new Circos({
-            container: '#chart',
-            width: 800,
-            height: 800,
-        });
-
-
-    var genome_configuration = {
-      innerRadius: 250,
-      outerRadius: 245,
-      cornerRadius: 4,
-      gap: 0.04, // in radian
-      labels: {
-        display: true,
-        position: 'center',
-        size: '14px',
-        color: '#000000',
-        radialOffset: 20,
-      },
-      ticks: {
-        display: true,
-        color: 'grey',
-        spacing: 10000000,
-        labels: true,
-        labelSpacing: 10,
-        labelSuffix: 'Mb',
-        labelDenominator: 1000000,
-        labelDisplay0: true,
-        labelSize: '10px',
-        labelColor: '#000000',
-        labelFont: 'default',
-        majorSpacing: 5,
-        size: {
-          minor: 2,
-          major: 5,
-            }
-          },
-          events: {}
-        };
-
-        var genome_data = [
-          { len: 340, color: "#8dd3c7", label: "H37Rv", id: "h37rv" }
-        ];
-
-
-
-    var gene_positions_config = {
-      innerRadius: null,
-      outerRadius: null,
-      min: null,
-      max: null,
-      color: '#fd6a62',
-      strokeColor: '#d3d3d3',
-      strokeWidth: 1,
-      direction: 'out',
-      thickness: 10,
-      radialMargin: 2,
-      margin: 2,
-      opacity: 1,
-      logScale: false,
-      tooltipContent: null,
-      events: {}
-};
-
-    var gene_positions_data = [
-    {
-      block_id: 'h37rv',
-      start: 8,
-      end: 10
-    },
-    {
-      block_id: 'h37rv',
-      start: 10,
-      end: 50
-    }
-];
-
-
-
-
-     myCircos.layout(genome_data, genome_configuration).stack('stack', gene_positions_data, gene_positions_config).render();
-
-    </script>
-
-</div>
-
 
 </body>
 </html>

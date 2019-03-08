@@ -5,6 +5,9 @@ from holmes.models import CurrentSettings, Experiment
 import re
 from gengraph import *
 from Bio.Seq import translate
+from os import listdir
+from os.path import isfile, join
+
 
 def subnet2json(in_graph):
 	# data = json.dumps({"nodes": json_data["nodes"], "links": json_data["links"]})
@@ -674,6 +677,86 @@ def get_variant_info(in_graph_obj, in_gengraph_obj):
 	return 'sdf'
 
 
+def check_loaded_genomes(dir):
+
+	found_files = {'genome': 'none', 'annotation': 'none'}
+
+	onlyfiles = [f for f in listdir(dir) if isfile(join(dir, f))]
+
+	annotation_filetypes = ['gff', 'gtf', 'bed']
+
+	genome_filetypes = ['fna', 'fa', 'fasta']
+
+	# Find annotations
+	for file_thing in onlyfiles:
+		extension = file_thing.split('.')[-1]
+		if extension in annotation_filetypes:
+			found_files['annotation'] = file_thing
+		elif extension in genome_filetypes:
+			found_files['genome'] = file_thing
+
+	return found_files
 
 
+def check_loaded_annotations(dir):
+
+	found_files = {'custom_annotation': 'none', 'gene_list': 'none'}
+
+	onlyfiles = [f for f in listdir(dir) if isfile(join(dir, f))]
+
+	annotation_filetypes = ['gff', 'gtf', 'bed']
+
+	# Find annotations
+	for file_thing in onlyfiles:
+		extension = file_thing.split('.')[-1]
+		if extension in annotation_filetypes and 'custom_subset.gff' not in onlyfiles:
+			found_files['custom_annotation'] = file_thing
+		elif extension == 'txt':
+			found_files['gene_list'] = file_thing
+		elif 'custom_subset.gff' in onlyfiles:
+			found_files['custom_annotation'] = 'custom_subset.gff'
+
+	return found_files
+
+
+def extract_gff_subset(anno_file_path, tar_feat_path, anno_folder):
+
+	tar_feat_file = open(tar_feat_path, 'r')
+
+	search_gene_list = []
+
+	for line in tar_feat_file:
+		if len(line) > 1:
+			search_gene_list.append(line.strip())
+
+	print(search_gene_list)
+
+	anno_file = open(anno_file_path, 'r')
+
+	out_anno_file = open(anno_folder + "custom_subset.gff", 'w')
+
+	for line in anno_file:
+		if line[0] == '#':
+			out_anno_file.write(line)
+
+	for a_gene in search_gene_list:
+
+		anno_file = open(anno_file_path, 'r')
+
+		for line in anno_file:
+
+			if line[0] != '#':
+
+				line_list = line.split('\t')
+
+				info_list = line_list[8]
+
+				if a_gene in info_list:
+
+					out_anno_file.write(line)
+
+	anno_file.close()
+	out_anno_file.close()
+
+	return 'Done'
 

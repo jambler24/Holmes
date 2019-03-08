@@ -1,8 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.conf import settings
+from django.shortcuts import redirect
 from django.core.files.storage import FileSystemStorage
-import json, os
+import json
+import os
 import networkx as nx
 from networkx.readwrite import json_graph
 import coverage_tools as cov_tools
@@ -17,11 +19,18 @@ import requests
 # Paths
 anno_folder = '/annotations/'
 bam_files_dir = '/bam_files/'
-anno_path = '/annotations/test_1_renamed.bed'
+ref_genome_folder = '/ref_genome/'
 
 
 def home(request):
-	return render(request, 'index.html')
+
+	loaded_genomes = check_loaded_genomes(ref_genome_folder)
+
+	loaded_custom_tracks = check_loaded_annotations(anno_folder)
+
+	print(loaded_custom_tracks)
+
+	return render(request, 'index.html', {'ref_files': loaded_genomes, 'custom_tracks': loaded_custom_tracks})
 
 
 def uploads(request):
@@ -175,6 +184,10 @@ def coverage_summary(request):
 
 	if request.method == 'POST':
 
+		loaded_custom_tracks = check_loaded_annotations('/annotations/')
+
+		anno_path = anno_folder + loaded_custom_tracks['custom_annotation']
+
 		q_gene = request.POST['a_gene_selection']
 		cov_threshold = int(request.POST['coverage_threshold'])
 
@@ -224,18 +237,16 @@ def coverage_summary(request):
 
 	else:
 
-		anno_file_list = [f for f in listdir(anno_folder) if isfile(join(anno_folder, f)) and f[-3:] == 'bed']
+		loaded_custom_tracks = check_loaded_annotations('/annotations/')
 
-
-
-		anno_obj = cov_tools.parse_annotation_file(anno_path)
+		anno_obj = cov_tools.parse_annotation_file(anno_folder + loaded_custom_tracks['custom_annotation'])
 
 		gene_list = []
 
 		for a_gene in anno_obj.keys():
 			gene_list.append(a_gene)
 
-		return render(request, 'coverage_summary_select.html', {'gene_list':gene_list})
+		return render(request, 'coverage_summary_select.html', {'gene_list': gene_list, 'track_name': loaded_custom_tracks['custom_annotation']})
 
 
 def coverage_summary_gene(request):
@@ -302,6 +313,7 @@ def coverage_summary_gene(request):
 	else:
 
 		anno_file_list = [f for f in listdir(anno_folder) if isfile(join(anno_folder, f)) and f[-3:] == 'bed']
+		anno_file_list = anno_file_list + [f for f in listdir(anno_folder) if isfile(join(anno_folder, f)) and f[-3:] == 'gff']
 
 		return render(request, 'coverage_summary_select_gene.html', {'anno_list': anno_file_list})
 
@@ -311,5 +323,16 @@ def view_region(request):
 	return render(request, 'view_read_align_region.html', {'gene_list': ''})
 
 
+def create_subset_file(request):
+
+	loaded_genomes = check_loaded_genomes(ref_genome_folder)
+	loaded_custom_tracks = check_loaded_annotations(anno_folder)
+
+	anno_file_path = loaded_genomes['annotation']
+	tar_feat_path = loaded_custom_tracks['gene_list']
+
+	extract_gff_subset(ref_genome_folder + anno_file_path, anno_folder + tar_feat_path, anno_folder)
+
+	return redirect('/')
 
 

@@ -16,6 +16,7 @@ urlpatterns = [
 	url(r'^coverageSummary/$', views.coverage_summary, name='coverageSummary'),
 	url(r'^coverageSummaryGene/$', views.coverage_summary_gene, name='coverageSummaryGene'),
 	url(r'^viewRegion/$', views.view_region, name='viewRegion'),
+	url(r'^getGeneSubset/$', views.create_subset_file, name='getGeneSubset'),
 	url('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

@@ -29,8 +29,10 @@ import pysam
 from os import listdir
 from os.path import isfile, join
 
+
 def average(lst):
 	return sum(lst) / float(len(lst))
+
 
 def get_region_coverage_info(bam_file_path, start_pos, stop_pos, chr_name, threshold=16):
 
@@ -79,6 +81,8 @@ def get_region_coverage_info(bam_file_path, start_pos, stop_pos, chr_name, thres
 
 def parse_annotation_file(in_file_path):
 
+	testing_chroms = True
+
 	file_obj = open(in_file_path, 'r')
 
 	anno_obj = {}
@@ -106,6 +110,59 @@ def parse_annotation_file(in_file_path):
 
 			else:
 				anno_obj[gene_name] = {'exons': {exon_number: {'exon_start': gene_start, 'exon_stop': gene_stop}}, 'gene_chrom': gene_chrom}
+
+	elif in_file_path.split('.')[-1] == 'gff':
+		print('Parsing gff file')
+		anno_obj = {}
+
+		# First pass of file to get mRNA names and ID
+		id_mapping_dict = {}
+
+		for line in file_obj:
+			if line[0] != '#':
+				line_list = line.split('\t')
+
+				if testing_chroms:
+					gene_chrom = line_list[0].split('.')[0]
+					gene_chrom = gene_chrom.split('_')[1]
+					gene_chrom = gene_chrom.lstrip('0')
+				else:
+
+					gene_chrom = line_list[0]
+
+				orientation = line_list[6]
+				if line_list[2] == 'mRNA':
+					for info_bite in line_list[8].split(';'):
+						if info_bite.split('=')[0] == 'Name':
+							gene_name = info_bite.split('=')[1]
+						if info_bite.split('=')[0] == 'ID':
+							gene_ID = info_bite.split('=')[1]
+
+				id_mapping_dict[gene_ID] = gene_name
+
+				anno_obj[gene_name] = {'exons': {}, 'gene_chrom': gene_chrom, 'orientation': orientation}
+
+		# Second pass of file to link exons
+		file_obj = open(in_file_path, 'r')
+
+		for line in file_obj:
+			if line[0] != '#':
+				line_list = line.split('\t')
+				if line_list[2] == 'exon':
+					print('\n ping')
+					for info_bite in line_list[8].split(';'):
+						if info_bite.split('=')[0] == 'Parent':
+							parent = info_bite.split('=')[1]
+						if info_bite.split('=')[0] == 'ID':
+							exon_ID = info_bite.split('=')[1].replace('id', '')
+					exon_start = line_list[3]
+					exon_stop = line_list[4]
+
+					linked_gene = id_mapping_dict[parent]
+
+					anno_obj[linked_gene]['exons'][exon_ID] = {'exon_start': exon_start, 'exon_stop': exon_stop}
+
+	print(anno_obj)
 
 	return anno_obj
 
