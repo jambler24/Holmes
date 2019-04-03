@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Holmes Homepage</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
 
 {% load static %}
 
@@ -12,44 +10,44 @@
 <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
 <script src='https://cdn.rawgit.com/nicgirault/circosJS/v2/dist/circos.js'></script>
 
-<div>
-    <h1>
-        Holmes Analytics Platform
-    </h1>
+<div >
+    <div>
+        <h1>
+            Holmes Analytics Platform
+        </h1>
 
-</div>
+    </div>
 
-<div>
-    <h2>Current data info</h2>
-    <p>
-        Information on the data currently loaded into the system.
-    </p>
-    <p>
-        Loaded genome: {{ref_files.genome }}
+    <div>
+        <h2>Current data info</h2>
+
+            <h3>Information on the data currently loaded into the system.</h3>
+                <ul>
+                    <li>Loaded genome: {{ref_files.genome }}</li>
+                    <li>Loaded annotation: {{ ref_files.annotation }}</li>
+                </ul>
+
+            <h3>Only the custom track is active</h3>
+                <ul>
+                    <li>Loaded gene list: {{custom_tracks.gene_list}}</li>
+                    <li>Loaded custom track: {{custom_tracks.custom_annotation}}</li>
+                </ul>
+
+    </div>
+
+    <div>
+        <h2>Menu</h2>
+        <a href="{% url 'coverageSummaryGene' %}">Sample coverage</a>
         <br>
-        Loaded annotation: {{ ref_files.annotation }}
-    </p>
-    <p>
-        <h3>Only the custom track is active</h3>
-        Loaded gene list: {{custom_tracks.gene_list}}
+        <a href="{% url 'coverageSummary' %}">Per gene coverage</a>
         <br>
-        Loaded custom track: {{custom_tracks.custom_annotation}}
-    </p>
+        <a href="{% url 'subNetworks' %}">Subnet page</a>
+
+        <br>
+        <br>
+        <br>
+        <p>Click the link bellow to create a new custom track from the loaded gene list</p>
+        <a href="{% url 'getGeneSubset' %}">Create custom gene annotation from list</a>
+    </div>
 </div>
-
-<div>
-    <h2>Menu</h2>
-    <a href="{% url 'coverageSummaryGene' %}">Sample coverage</a>
-    <br>
-    <a href="{% url 'coverageSummary' %}">Per gene coverage</a>
-    <br>
-    <a href="{% url 'subNetworks' %}">Subnet page</a>
-
-    <br>
-    <br>
-    <br>
-    <a href="{% url 'getGeneSubset' %}">Create custom gene annotation from list</a>
-</div>
-
-</body>
-</html>
+{% endblock %}
