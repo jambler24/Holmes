@@ -28,6 +28,10 @@ def home(request):
 
 	loaded_custom_tracks = check_loaded_annotations(anno_folder)
 
+	loaded_var_files = check_loaded_vcf(anno_folder)
+
+	loaded_bam_files = check_loaded_bam(bam_files_dir)
+
 	print(loaded_custom_tracks)
 
 	return render(request, 'index.html', {'ref_files': loaded_genomes, 'custom_tracks': loaded_custom_tracks})

@@ -721,6 +721,44 @@ def check_loaded_annotations(dir):
 	return found_files
 
 
+def check_loaded_vcf(dir):
+
+	found_files = []
+
+	onlyfiles = [f for f in listdir(dir) if isfile(join(dir, f))]
+
+	annotation_filetypes = ['vcf']
+
+	# Find VCF
+	for file_thing in onlyfiles:
+		extension = file_thing.split('.')[-1]
+		extension = extension.lower()
+
+		if extension in annotation_filetypes:
+			found_files.append(file_thing)
+
+	return found_files
+
+
+def check_loaded_bam(dir):
+
+	found_files = []
+
+	onlyfiles = [f for f in listdir(dir) if isfile(join(dir, f))]
+
+	annotation_filetypes = ['bam']
+
+	# Find bam file
+	for file_thing in onlyfiles:
+		extension = file_thing.split('.')[-1]
+		extension = extension.lower()
+
+		if extension in annotation_filetypes:
+			found_files.append(file_thing)
+
+	return found_files
+
+
 def extract_gff_subset(anno_file_path, tar_feat_path, anno_folder):
 
 	tar_feat_file = open(tar_feat_path, 'r')
