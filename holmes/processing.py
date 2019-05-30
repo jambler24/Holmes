@@ -704,11 +704,13 @@ def check_loaded_annotations(dir):
 
 	onlyfiles = [f for f in listdir(dir) if isfile(join(dir, f))]
 
-	annotation_filetypes = ['gff', 'gtf', 'bed']
+	annotation_filetypes = ['gff', 'gtf', 'bed', 'gff3']
 
 	# Find annotations
 	for file_thing in onlyfiles:
 		extension = file_thing.split('.')[-1]
+		extension = extension.lower()
+
 		if extension in annotation_filetypes and 'custom_subset.gff' not in onlyfiles:
 			found_files['custom_annotation'] = file_thing
 		elif extension == 'txt':
