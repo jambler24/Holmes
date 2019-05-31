@@ -32,8 +32,6 @@ def home(request):
 
 	loaded_bam_files = check_loaded_bam(bam_files_dir)
 
-	print(loaded_custom_tracks)
-
 	return render(request, 'index.html', {
 		'ref_files': loaded_genomes,
 		'custom_tracks': loaded_custom_tracks,
@@ -43,6 +41,51 @@ def home(request):
 
 
 def uploads(request):
+	if request.method == 'POST' and request.FILES['myfile']:
+		#myfile = request.FILES['myfile']
+		#fs = FileSystemStorage()
+		#filename = fs.save(myfile.name, myfile)
+		#uploaded_file_url = fs.url(filename)
+		uploaded_file_url = 'Temp disabled'
+		file_type = 'gff'
+
+		if file_type == 'gff':
+
+			gff2network('/Users/panix/iCloud/programs/Holmes/holmes_core/uploads/sequence.gff3',
+						'/Users/panix/iCloud/programs/Holmes/holmes_core/processed')
+
+		file_type = 'expression'
+
+		if file_type == 'expression':
+
+			genome_graph = nx.read_graphml('processed/test_result_network.xml')
+
+			expression2network('uploads/gene_exp.diff', genome_graph, 'processed')
+
+			print("processing expression data: complete")
+
+		file_type = 'variants'
+
+		if file_type == 'variants':
+			print("processing variant data")
+
+			genome_graph = nx.read_graphml('processed/test_exp_network.xml')
+
+
+			variants2network('uploads/S5527_aligned_to_h37rv_RG_sorted_filtered_ann_unique.vcf', genome_graph, 'processed')
+			variants2network('uploads/S507_aligned_to_h37rv_RG_sorted_filtered_ann_unique.vcf', genome_graph, 'processed')
+
+			print("processing variant data: complete")
+
+
+		# Convert gff to GML
+
+		return render(request, 'uploads.html', {'uploaded_file_url': uploaded_file_url})
+
+	return render(request, 'uploads.html')
+
+
+def load_data_to_network(request):
 	if request.method == 'POST' and request.FILES['myfile']:
 		#myfile = request.FILES['myfile']
 		#fs = FileSystemStorage()

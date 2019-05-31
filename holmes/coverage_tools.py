@@ -36,9 +36,6 @@ def average(lst):
 
 def get_region_coverage_info(bam_file_path, start_pos, stop_pos, chr_name, threshold=16):
 
-	if chr_name[:3] == 'chr':
-		chr_name = chr_name[3:]
-
 	samfile = pysam.AlignmentFile(bam_file_path, "rb")
 
 	iter = samfile.pileup(chr_name, int(start_pos), int(stop_pos))
