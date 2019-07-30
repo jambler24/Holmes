@@ -3,7 +3,7 @@ import csv, os
 import django_tables2 as tables
 from holmes.models import CurrentSettings, Experiment
 import re
-from gengraph import *
+from GenGraph import *
 from Bio.Seq import translate
 from os import listdir
 from os.path import isfile, join
