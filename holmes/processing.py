@@ -683,7 +683,7 @@ def check_loaded_genomes(dir):
 
 	onlyfiles = [f for f in listdir(dir) if isfile(join(dir, f))]
 
-	annotation_filetypes = ['gff', 'gtf', 'bed']
+	annotation_filetypes = ['gff', 'gtf', 'bed', 'gff3']
 
 	genome_filetypes = ['fna', 'fa', 'fasta']
 

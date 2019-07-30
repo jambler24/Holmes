@@ -7,7 +7,8 @@ import json
 import os
 import networkx as nx
 from networkx.readwrite import json_graph
-import coverage_tools as cov_tools
+#import coverage_tools as cov_tools
+import holmes.coverage_tools as cov_tools
 from .processing import *
 from .forms import UploadFileForm
 from holmes.models import Experiment, CurrentSettings
